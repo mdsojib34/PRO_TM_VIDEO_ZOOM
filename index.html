@@ -50,7 +50,8 @@ body{padding-bottom:100px}
 .brand-logo{width:34px;height:34px;border-radius:10px;background:var(--grad-hero);display:grid;place-items:center;font-size:16px;box-shadow:var(--shadow-glow)}
 .header-actions{display:flex;align-items:center;gap:8px}
 .user-chip{display:flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:var(--surface)}
-.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--grad-hero);display:grid;place-items:center;font-size:11px;font-weight:700}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--grad-hero);display:grid;place-items:center;font-size:11px;font-weight:700;overflow:hidden}
+.user-avatar img{width:100%;height:100%;object-fit:cover}
 .admin-badge{font-size:8px;padding:2px 5px;border-radius:4px;background:linear-gradient(135deg,#ff5c9d,#ffb547);color:#1a1035;font-weight:800;margin-left:4px}
 .lang-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer}
 
@@ -154,7 +155,7 @@ body{padding-bottom:100px}
 .form-group input, .form-group select, .form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit}
 .thumb-prev{width:100%;aspect-ratio:16/9;border:2px dashed var(--border);border-radius:12px;margin-top:5px;display:grid;place-items:center;overflow:hidden}
 .thumb-prev img{width:100%;height:100%;object-fit:cover}
-.admin-list-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);padding:10px 12px;border-radius:12px;margin-bottom:8px}
+.admin-list-item{display:flex;align-items:center;justify-content:between;background:var(--surface);border:1px solid var(--border);padding:10px 12px;border-radius:12px;margin-bottom:8px}
 .admin-list-info{display:flex;align-items:center;gap:10px;overflow:hidden}
 .admin-list-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;background:#000}
 
@@ -172,6 +173,153 @@ body{padding-bottom:100px}
 .hidden{display:none}
 .empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
 .empty-state i{font-size:40px;display:block;margin-bottom:10px}
+
+/* =========================================================
+   NEW PROFILE PAGE STYLES (WHITE THEME & PREMIUM UI)
+   ========================================================= */
+#view-profile {
+  background-color: #f8fafc;
+  min-height: calc(100vh - 60px);
+  padding: 20px 16px 40px 16px;
+  color: #1e293b;
+}
+
+.profile-container {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-hero-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 16px auto;
+  padding: 4px;
+  border-radius: 50%;
+  background: var(--grad-hero);
+  box-shadow: 0 8px 25px -5px rgba(124, 92, 255, 0.35);
+}
+
+.profile-avatar-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 36px;
+  font-weight: 800;
+  color: #7c5cff;
+}
+
+.profile-avatar-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.profile-username {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.profile-id-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.profile-menu-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+
+.profile-menu-item:last-child {
+  border-bottom: none;
+}
+
+.profile-menu-item:active {
+  background: #f8fafc;
+}
+
+.profile-menu-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-menu-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
+.profile-menu-arrow {
+  color: #94a3b8;
+  font-size: 16px;
+  font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -250,19 +398,45 @@ body{padding-bottom:100px}
   <div id="viral-links-list"></div>
 </section>
 
-<!-- PROFILE VIEW -->
+<!-- PROFILE VIEW (UPDATED WHITE THEME & PREMIUM UI) -->
 <section class="view" id="view-profile">
-  <div style="text-align:center;padding:30px 0">
-    <div id="prof-pic" style="width:80px;height:80px;border-radius:50%;background:var(--grad-hero);margin:0 auto 15px;display:grid;place-items:center;font-size:30px;font-weight:800;border:3px solid var(--surface-2)">U</div>
-    <h2 id="prof-name">Guest</h2>
-    <p style="color:var(--muted);font-size:12px" id="prof-id">ID: 000000</p>
-  </div>
-  <div class="admin-card" style="padding:0">
-    <button class="btn btn-g" style="border:none;border-radius:0;justify-content:flex-start" onclick="showView('fav')" data-i18n="myFavs">❤️ আমার পছন্দের ভিডিও</button>
-    <div style="height:1px;background:var(--border)"></div>
-    <button class="btn btn-g" style="border:none;border-radius:0;justify-content:flex-start" onclick="showView('unlock')" data-i18n="unlockedVids">🔓 আনলক করা ভিডিও</button>
-    <div style="height:1px;background:var(--border)"></div>
-    <button class="btn btn-g" style="border:none;border-radius:0;justify-content:flex-start" onclick="exportData()" data-i18n="backupDownload">📥 ব্যাকআপ ডাউনলোড</button>
+  <div class="profile-container">
+    <div class="profile-hero-card">
+      <div class="profile-avatar-wrapper">
+        <div class="profile-avatar-inner" id="prof-avatar-box">
+          <span id="prof-default-letter">U</span>
+        </div>
+      </div>
+      <h2 class="profile-name" id="prof-name">Guest</h2>
+      <div class="profile-username" id="prof-username">@username</div>
+      <div class="profile-id-pill">
+        <span>🆔</span> <span id="prof-id">ID: 000000</span>
+      </div>
+    </div>
+
+    <div class="profile-menu-card">
+      <button class="profile-menu-item" onclick="showView('fav')">
+        <div class="profile-menu-left">
+          <div class="profile-menu-icon">❤️</div>
+          <span data-i18n="myFavs">আমার পছন্দের ভিডিও</span>
+        </div>
+        <div class="profile-menu-arrow">›</div>
+      </button>
+      <button class="profile-menu-item" onclick="showView('unlock')">
+        <div class="profile-menu-left">
+          <div class="profile-menu-icon">🔓</div>
+          <span data-i18n="unlockedVids">আনলক করা ভিডিও</span>
+        </div>
+        <div class="profile-menu-arrow">›</div>
+      </button>
+      <button class="profile-menu-item" onclick="exportData()">
+        <div class="profile-menu-left">
+          <div class="profile-menu-icon">📥</div>
+          <span data-i18n="backupDownload">ব্যাকআপ ডাউনলোড</span>
+        </div>
+        <div class="profile-menu-arrow">›</div>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -528,7 +702,7 @@ let state = {
 };
 
 let tg = window.Telegram.WebApp || {};
-let user = tg.initDataUnsafe?.user || { id: 123456, first_name: 'Guest' };
+let user = tg.initDataUnsafe?.user || { id: 123456, first_name: 'Guest', last_name: '', username: 'guest', photo_url: '' };
 let currentCat = 'cat_all';
 let isAdShowing = false;
 let currentActiveVid = null;
@@ -1402,11 +1576,44 @@ function showToast(msg, type = 'info') {
 }
 
 function updateUserUI() {
-  const setEl = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
-  setEl('u-name', user.first_name);
-  setEl('u-avatar', user.first_name ? user.first_name.charAt(0) : 'U');
-  setEl('prof-name', user.first_name);
-  setEl('prof-id', `ID: ${user.id}`);
+  const firstName = user.first_name || 'Guest';
+  const lastName = user.last_name || '';
+  const fullName = `${firstName} ${lastName}`.trim();
+  const username = user.username ? `@${user.username}` : '@user';
+  const userId = user.id || '000000';
+  const photoUrl = user.photo_url || '';
+
+  // Header Avatar & Name
+  const uNameEl = document.getElementById('u-name');
+  if(uNameEl) uNameEl.textContent = firstName;
+
+  const uAvatarEl = document.getElementById('u-avatar');
+  if(uAvatarEl) {
+    if(photoUrl) {
+      uAvatarEl.innerHTML = `<img src="${photoUrl}" alt="Avatar">`;
+    } else {
+      uAvatarEl.textContent = firstName.charAt(0).toUpperCase();
+    }
+  }
+
+  // Profile View Elements
+  const profNameEl = document.getElementById('prof-name');
+  if(profNameEl) profNameEl.textContent = fullName;
+
+  const profUsernameEl = document.getElementById('prof-username');
+  if(profUsernameEl) profUsernameEl.textContent = username;
+
+  const profIdEl = document.getElementById('prof-id');
+  if(profIdEl) profIdEl.textContent = `ID: ${userId}`;
+
+  const profAvatarBox = document.getElementById('prof-avatar-box');
+  if(profAvatarBox) {
+    if(photoUrl) {
+      profAvatarBox.innerHTML = `<img src="${photoUrl}" alt="Profile Picture">`;
+    } else {
+      profAvatarBox.innerHTML = `<span id="prof-default-letter">${firstName.charAt(0).toUpperCase()}</span>`;
+    }
+  }
 }
 
 function updateStats() {
