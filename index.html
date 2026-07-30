@@ -12,24 +12,27 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+/* =========================================================
+   CORE DESIGN SYSTEM
+   ========================================================= */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#f8fafc;          /* একদম পেছনের ব্যাকগ্রাউন্ড (হালকা সাদা/গ্রে) */
-  --surface:#ffffff;     /* কার্ড ও বিভিন্ন বক্সের ব্যাকগ্রাউন্ড (খাঁটি সাদা) */
-  --surface-2:#f1f5f9;   /* ড্রপডাউন বা সাব-এলিমেন্টের ব্যাকগ্রাউন্ড */
-  --border:#e2e8f0;      /* বর্ডার বা দাগের কালার (হালকা ছাইরঙা) */
-  --text:#0f172a;        /* লেখার মূল কালার (গাঢ় কালো/নেভি ব্লু) */
-  --muted:#64748b;       /* একটু হালকা বা অনুজ্জ্বল লেখার কালার */
-  --primary:#7c5cff;     /* প্রধান আকর্ষণ বা প্রাইমারি কালার (বেগুনি) */
-  --primary-2:#5b8dff;   /* দ্বিতীয় প্রাইমারি কালার (নীল) */
-  --accent:#ff5c9d;      /* লাভ রিয়েক্ট বা বিশেষ হাইলাইটের কালার */
-  --success:#10b981;     /* সফল বা আনলকড বোঝাতে (সবুজ) */
-  --warning:#f59e0b;     /* ওয়ার্নিং বা লকড আইকনের কালার */
-  --danger:#ef4444;      /* ডিলিট বা ভুল বোঝাতে (লাল) */
+  --bg:#0b0d17;
+  --surface:#141826;
+  --surface-2:#1c2135;
+  --border:#262c44;
+  --text:#f2f4fb;
+  --muted:#8e94b3;
+  --primary:#7c5cff;
+  --primary-2:#5b8dff;
+  --accent:#ff5c9d;
+  --success:#22c58a;
+  --warning:#ffb547;
+  --danger:#ff5773;
   --grad-hero:linear-gradient(135deg,#7c5cff 0%,#5b8dff 50%,#22c9d9 100%);
-  --grad-unlock:linear-gradient(135deg,#10b981 0%,#34d399 100%);
-  --grad-card:linear-gradient(160deg,#ffffff 0%,#f8fafc 100%);
-  --shadow-glow:0 10px 30px -10px rgba(0,0,0,0.08);
+  --grad-unlock:linear-gradient(135deg,#22c58a 0%,#5bd6b0 100%);
+  --grad-card:linear-gradient(160deg,#1a1f33 0%,#141826 100%);
+  --shadow-glow:0 10px 40px -10px rgba(124,92,255,.55);
 }
 html,body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
 body{padding-bottom:100px}
@@ -40,33 +43,33 @@ body{padding-bottom:100px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* HEADER */
-.app-header{position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);background:rgba(248,250,252,.85);border-bottom:1px solid var(--border)}
+.app-header{position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);background:rgba(11,13,23,.85);border-bottom:1px solid var(--border)}
 .app-header .row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800}
-.brand-logo{width:34px;height:34px;border-radius:10px;background:var(--grad-hero);display:grid;place-items:center;font-size:16px;color:#fff;box-shadow:var(--shadow-glow)}
+.brand-logo{width:34px;height:34px;border-radius:10px;background:var(--grad-hero);display:grid;place-items:center;font-size:16px;box-shadow:var(--shadow-glow)}
 .header-actions{display:flex;align-items:center;gap:8px}
 .user-chip{display:flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:var(--surface)}
-.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--grad-hero);display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--grad-hero);display:grid;place-items:center;font-size:11px;font-weight:700}
 .admin-badge{font-size:8px;padding:2px 5px;border-radius:4px;background:linear-gradient(135deg,#ff5c9d,#ffb547);color:#1a1035;font-weight:800;margin-left:4px}
 .lang-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer}
 
 /* SEARCH & CATEGORY */
 .search-container{padding:10px 16px}
 .search-box{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);padding:10px 15px;border-radius:14px}
-.search-box input{background:none;border:none;color:var(--text);font-size:14px;width:100%;outline:none}
+.search-box input{background:none;border:none;color:#fff;font-size:14px;width:100%;outline:none}
 .cat-tabs{display:flex;gap:8px;overflow-x:auto;padding:0 16px 15px;scrollbar-width:none}
 .cat-tabs::-webkit-scrollbar{display:none}
-.tab{padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:13px;white-space:nowrap;transition:0.3s;cursor:pointer;color:var(--text)}
+.tab{padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;font-size:13px;white-space:nowrap;transition:0.3s;cursor:pointer}
 .tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
 
 /* HERO SECTION */
-.hero-card{background:var(--grad-hero);color:#fff;padding:20px;border-radius:24px;margin:0 16px 20px;position:relative;overflow:hidden;box-shadow:var(--shadow-glow)}
+.hero-card{background:var(--grad-hero);padding:20px;border-radius:24px;margin:0 16px 20px;position:relative;overflow:hidden;box-shadow:var(--shadow-glow)}
 .hero-card h2{font-size:20px;margin-bottom:4px}
 .hero-card p{font-size:12px;opacity:0.9}
 .hero-stats{display:flex;gap:10px;margin-top:15px}
-.stat-pill{background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:12px;flex:1;text-align:center}
+.stat-pill{background:rgba(255,255,255,0.15);padding:8px 12px;border-radius:12px;flex:1;text-align:center}
 .stat-pill b{display:block;font-size:16px}
-.stat-pill span{font-size:9px;text-transform:uppercase;opacity:0.9}
+.stat-pill span{font-size:9px;text-transform:uppercase;opacity:0.8}
 
 /* VIEWS */
 .view{display:none;padding:0 16px}
@@ -76,26 +79,18 @@ body{padding-bottom:100px}
 
 /* GRID & CARDS */
 .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));gap:12px}
-.card{background:var(--grad-card);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;transition:0.2s}
-.card-thumb{aspect-ratio:16/10;position:relative;background:#e2e8f0;cursor:pointer}
+.card{background:var(--grad-card);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;transition:0.2s;cursor:pointer}
+.card:active{transform:scale(0.97)}
+.card-thumb{aspect-ratio:16/10;position:relative;background:#000}
 .card-thumb img{width:100%;height:100%;object-fit:cover}
 .card-badge{position:absolute;top:8px;left:8px;padding:3px 7px;border-radius:6px;font-size:9px;font-weight:700;backdrop-filter:blur(6px)}
-.badge-locked{background:rgba(255,255,255,0.85);color:var(--warning);border:1px solid var(--border)}
-.badge-unlocked{background:rgba(16,185,129,0.9);color:#fff}
-.card-play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,0.1)}
-.play-btn-circle{width:36px;height:36px;background:rgba(255,255,255,0.8);backdrop-filter:blur(4px);border-radius:50%;display:grid;place-items:center;color:#0f172a}
+.badge-locked{background:rgba(0,0,0,0.6);color:var(--warning)}
+.badge-unlocked{background:rgba(34,197,138,0.85);color:#fff}
+.card-play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,0.2)}
+.play-btn-circle{width:36px;height:36px;background:rgba(255,255,255,0.25);backdrop-filter:blur(4px);border-radius:50%;display:grid;place-items:center}
 .card-body{padding:10px}
-.card-cat{font-size:9px;color:var(--primary);text-transform:uppercase;font-weight:700;margin-bottom:2px}
-.card-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:5px}
-.card-title{font-size:13px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:34px;cursor:pointer;flex:1}
-.card-menu-btn{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0 4px}
-
-/* CUSTOM CONTEXT MENU FOR CARD */
-.card-menu-dropdown{position:absolute;bottom:35px;right:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:6px;display:none;z-index:20;box-shadow:0 10px 25px rgba(0,0,0,0.1);width:140px}
-.card-menu-dropdown.open{display:block}
-.card-menu-item{padding:8px 10px;font-size:11px;color:var(--text);border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px}
-.card-menu-item:hover{background:var(--primary);color:#fff}
-
+.card-cat{font-size:9px;color:var(--primary-2);text-transform:uppercase;font-weight:700;margin-bottom:2px}
+.card-title{font-size:13px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:34px}
 .card-footer{margin-top:8px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted)}
 
 /* VIRAL LINKS CARD */
@@ -103,21 +98,21 @@ body{padding-bottom:100px}
 .viral-card:hover{border-color:var(--primary)}
 .viral-info{display:flex;align-items:center;gap:12px;overflow:hidden}
 .viral-icon{width:42px;height:42px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center;font-size:20px;flex-shrink:0}
-.viral-title{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viral-title{font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .viral-url{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
 
 /* MODAL / BOTTOM SHEET */
-.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);display:none;align-items:flex-end}
+.modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:none;align-items:flex-end}
 .modal.open{display:flex}
-.modal-sheet{background:var(--surface);width:100%;max-height:92vh;border-radius:28px 28px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:slideUp 0.4s cubic-bezier(0,0,0.2,1);border-top:1px solid var(--border)}
+.modal-sheet{background:var(--bg);width:100%;max-height:92vh;border-radius:28px 28px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:slideUp 0.4s cubic-bezier(0,0,0.2,1)}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-header{padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
 .sheet-content{padding:16px;overflow-y:auto;flex:1}
 
 /* PROGRESS BAR */
 .prog-wrap{margin:15px 0}
-.prog-labels{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;color:var(--muted)}
-.prog-track{height:8px;background:var(--surface-2);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.prog-labels{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
+.prog-track{height:8px;background:var(--surface-2);border-radius:10px;overflow:hidden}
 .prog-fill{height:100%;background:var(--grad-hero);border-radius:10px;transition:0.5s ease;width:0%}
 
 /* BUTTONS */
@@ -125,37 +120,37 @@ body{padding-bottom:100px}
 .btn:active{transform:scale(0.96)}
 .btn-p{background:var(--grad-hero);box-shadow:var(--shadow-glow)}
 .btn-s{background:var(--grad-unlock)}
-.btn-g{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+.btn-g{background:var(--surface-2);border:1px solid var(--border)}
 .btn-d{background:var(--danger)}
 .btn:disabled{opacity:0.6;pointer-events:none}
 
 /* COMMENTS */
 .comment-list{margin-top:20px;display:flex;flex-direction:column;gap:10px}
-.comment-item{background:var(--surface-2);padding:10px;border-radius:12px;border:1px solid var(--border)}
-.comment-meta{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;color:var(--primary)}
+.comment-item{background:var(--surface-2);padding:10px;border-radius:12px}
+.comment-meta{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;color:var(--primary-2)}
 
 /* ADMIN INTERFACE */
 .admin-card{background:var(--surface);border:1px solid var(--border);padding:15px;border-radius:18px;margin-bottom:15px}
 .form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:11px;margin-bottom:5px;color:var(--muted)}
-.form-group input, .form-group select, .form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:10px;border-radius:10px;color:var(--text);font-family:inherit}
-.thumb-prev{width:100%;aspect-ratio:16/9;border:2px dashed var(--border);border-radius:12px;margin-top:5px;display:grid;place-items:center;overflow:hidden;background:var(--surface-2);color:var(--muted)}
+.form-group input, .form-group select, .form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit}
+.thumb-prev{width:100%;aspect-ratio:16/9;border:2px dashed var(--border);border-radius:12px;margin-top:5px;display:grid;place-items:center;overflow:hidden}
 .thumb-prev img{width:100%;height:100%;object-fit:cover}
 
 /* ADMIN LIST ITEMS */
 .admin-list-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);padding:10px 12px;border-radius:12px;margin-bottom:8px}
 .admin-list-info{display:flex;align-items:center;gap:10px;overflow:hidden}
-.admin-list-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;background:#e2e8f0}
+.admin-list-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;background:#000}
 
 /* NAV */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(15px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 5px calc(10px + env(safe-area-inset-bottom));z-index:150}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(11,13,23,0.95);backdrop-filter:blur(15px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 5px calc(10px + env(safe-area-inset-bottom));z-index:150}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;font-weight:600;flex:1;background:none;border:none;cursor:pointer}
 .nav-item.active{color:var(--primary)}
 .nav-item i{font-size:18px;font-style:normal}
 
 /* TOAST */
 #toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:2000;width:90%;max-width:400px;pointer-events:none}
-.toast{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:12px 16px;border-radius:12px;margin-bottom:10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,0.1);display:flex;align-items:center;gap:10px;animation:toastIn 0.3s forwards}
+.toast{background:var(--surface-2);border:1px solid var(--border);padding:12px 16px;border-radius:12px;margin-bottom:10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:flex;align-items:center;gap:10px;animation:toastIn 0.3s forwards}
 @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
 
 /* UTILS */
@@ -178,7 +173,7 @@ body{padding-bottom:100px}
     <div class="brand">
       <div class="brand-logo">▶</div>
       <div>
-        <div style="font-size:14px;color:var(--text)">VidUnlock</div>
+        <div style="font-size:14px">VidUnlock</div>
         <div style="font-size:8px;color:var(--muted)" data-i18n="premiumAccess">PREMIUM ACCESS</div>
       </div>
     </div>
@@ -243,7 +238,7 @@ body{padding-bottom:100px}
 <!-- VIEW: PROFILE -->
 <section class="view" id="view-profile">
   <div style="text-align:center;padding:30px 0">
-    <div id="prof-pic" style="width:80px;height:80px;border-radius:50%;background:var(--grad-hero);margin:0 auto 15px;display:grid;place-items:center;font-size:30px;font-weight:800;border:3px solid var(--surface-2);color:#fff">U</div>
+    <div id="prof-pic" style="width:80px;height:80px;border-radius:50%;background:var(--grad-hero);margin:0 auto 15px;display:grid;place-items:center;font-size:30px;font-weight:800;border:3px solid var(--surface-2)">U</div>
     <h2 id="prof-name">Guest</h2>
     <p style="color:var(--muted);font-size:12px" id="prof-id">ID: 000000</p>
   </div>
@@ -327,7 +322,7 @@ body{padding-bottom:100px}
       <h4>Data Management</h4>
       <div style="display:grid;gap:10px;margin-top:10px">
         <button class="btn btn-g" onclick="exportData()">📥 Export Backup (JSON)</button>
-        <label class="btn btn-g" style="cursor:pointer;text-align:center">📤 Import Backup<input type="file" style="display:none" accept=".json" onchange="importData(this)"></label>
+        <label class="btn btn-g">📤 Import Backup<input type="file" style="display:none" accept=".json" onchange="importData(this)"></label>
         <button class="btn btn-d" onclick="clearAppData()">⚠️ Clear All Data</button>
       </div>
     </div>
@@ -338,10 +333,10 @@ body{padding-bottom:100px}
 <div class="modal" id="modal-detail">
   <div class="modal-sheet">
     <div class="sheet-header">
-      <button onclick="closeModal('modal-detail')" style="background:none;border:none;font-size:22px;color:var(--text);cursor:pointer">✕</button>
+      <button onclick="closeModal('modal-detail')" style="background:none;border:none;font-size:22px;color:#fff">✕</button>
       <div id="md-header-title" style="font-weight:700">Video Details</div>
       <div style="display:flex;gap:15px;align-items:center;">
-        <button id="md-react-btn" style="background:none;border:none;font-size:20px;cursor:pointer;">❤️ <span id="md-react-count">0</span></button>
+        <button id="md-react-btn" style="background:none;border:none;font-size:20px;cursor:pointer;" onclick="toggleReaction()">❤️ <span id="md-react-count">0</span></button>
         <button id="md-fav-btn" style="background:none;border:none;font-size:22px;cursor:pointer;">🤍</button>
       </div>
     </div>
@@ -362,7 +357,7 @@ body{padding-bottom:100px}
           <button class="btn btn-g" style="padding:5px 10px;width:auto;font-size:10px" onclick="shareVideo()">🔗 শেয়ার</button>
         </div>
         <div style="display:flex;gap:8px">
-          <input type="text" id="md-comment-input" placeholder="আপনার মন্তব্য লিখুন..." style="flex:1;background:var(--bg);border:1px solid var(--border);padding:10px;border-radius:10px;color:var(--text);outline:none">
+          <input type="text" id="md-comment-input" placeholder="আপনার মন্তব্য লিখুন..." style="flex:1;background:var(--surface);border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff">
           <button class="btn btn-p" style="width:auto;padding:0 15px" onclick="postComment()">Submit</button>
         </div>
         <div class="comment-list" id="md-comments"></div>
@@ -385,22 +380,10 @@ body{padding-bottom:100px}
 
 <script>
 const ADMIN_ID = 7904568371;
-const STORE_KEY = "VidUnlock_Core_State_V7";
+const STORE_KEY = "VidUnlock_Core_State_V6";
 
 const SUPABASE_URL = 'https://xvrmkygegzyavwhtvcjp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cm1reWdlZ3p5YXZ3aHR2Y2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNDg4ODksImV4cCI6MjEwMDgyNDg4OX0.Zm2nj2ea3Cz9tVgL7EQBNoYZ_krAZcYg-CSUg7_Ppk0';
-
-const DEFAULT_VIDEOS = [
-  {
-    id: 'v_default_1',
-    title: 'অনেকেই রিকোয়েস্ট করছিলেন এই মেয়ের হট হট কিছু ভিডিও দেওয়ার জন্য তাই পেলাম...',
-    category_id: 'cat_viral',
-    link: 'https://mdsojib34.github.io/Video/',
-    thumb: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60',
-    required_ads: 3,
-    views: { '1': true, '2': true }
-  }
-];
 
 let supabaseClient;
 try {
@@ -475,13 +458,13 @@ const i18n = {
 };
 
 let state = {
-  version: 7,
+  version: 6,
   lang: 'bn',
   categories: [
     { id: 'cat_all', name: 'সব', icon: '✨', order: 0 },
     { id: 'cat_viral', name: 'ভাইরাল', icon: '🔥', order: 1 }
   ],
-  videos: DEFAULT_VIDEOS,
+  videos: [],
   viralLinks: [],
   unlocked: {},
   progress: {},
@@ -515,7 +498,7 @@ async function initApp() {
   if (supabaseClient) {
     try {
       const { data: dbVids } = await supabaseClient.from('videos').select('*');
-      if (dbVids && dbVids.length > 0) state.videos = dbVids;
+      if (dbVids) state.videos = dbVids;
 
       const { data: dbCats } = await supabaseClient.from('categories').select('*');
       if (dbCats && dbCats.length > 0) {
@@ -525,15 +508,8 @@ async function initApp() {
       const { data: dbViral } = await supabaseClient.from('viral_links').select('*');
       if (dbViral) state.viralLinks = dbViral;
     } catch (err) {
-      console.error("Supabase sync failed, using local/default storage", err);
+      console.error("Supabase sync failed, using local storage", err);
     }
-  }
-
-  const startParam = tg.initDataUnsafe?.start_param || tg.initDataUnsafe?.startapp;
-  if (startParam) {
-    setTimeout(() => {
-      openDetail(startParam);
-    }, 500);
   }
 
   if (Number(user.id) === ADMIN_ID) {
@@ -607,77 +583,26 @@ function createVideoCard(v) {
   const viewsCount = v.views ? (typeof v.views === 'object' ? Object.keys(v.views).length : 0) : 0;
   const catObj = state.categories.find(c => c.id === v.category_id || c.id === v.categoryId);
   const catName = catObj ? catObj.name : '';
-  const reqAds = v.required_ads || v.requiredAds || 3;
 
   return `
-    <div class="card" id="card-${v.id}">
-      <div class="card-thumb" onclick="openDetail('${v.id}')">
+    <div class="card" onclick="openDetail('${v.id}')">
+      <div class="card-thumb">
         <img src="${v.thumb || ''}" loading="lazy">
         <div class="card-badge ${isUnlocked ? 'badge-unlocked' : 'badge-locked'}">
-          ${isUnlocked ? (state.lang==='bn'?'🔓 আনলক':'🔓 Unlocked') : (state.lang==='bn'?`UNLOCK — 0/${reqAds} ADS`:`UNLOCK — 0/${reqAds} ADS`)}
+          ${isUnlocked ? (state.lang==='bn'?'🔓 আনলক':'🔓 Unlocked') : (state.lang==='bn'?'🔒 লক':'🔒 Locked')}
         </div>
         <div class="card-play"><div class="play-btn-circle">▶</div></div>
       </div>
       <div class="card-body">
         <div class="card-cat">${catName}</div>
-        <div class="card-title-row">
-          <div class="card-title" onclick="openDetail('${v.id}')">${v.title}</div>
-          <button class="card-menu-btn" onclick="toggleCardMenu(event, '${v.id}')">⋮</button>
-        </div>
-        
-        <div class="card-menu-dropdown" id="menu-dropdown-${v.id}">
-          <div class="card-menu-item" onclick="copyVideoShareLink('${v.id}')">📋 লিংক কপি করুন</div>
-        </div>
-
-        <div class="card-footer" onclick="openDetail('${v.id}')" style="cursor:pointer">
+        <div class="card-title">${v.title}</div>
+        <div class="card-footer">
           <span>👁 ${viewsCount} views</span>
           <span>${isFav ? '❤️' : '🤍'}</span>
         </div>
       </div>
     </div>
   `;
-}
-
-function toggleCardMenu(event, vidId) {
-  event.stopPropagation();
-  document.querySelectorAll('.card-menu-dropdown').forEach(d => {
-    if(d.id !== `menu-dropdown-${vidId}`) d.classList.remove('open');
-  });
-  const menu = document.getElementById(`menu-dropdown-${vidId}`);
-  if(menu) menu.classList.toggle('open');
-}
-
-window.addEventListener('click', () => {
-  document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.remove('open'));
-});
-
-function copyVideoShareLink(vidId) {
-  const shareUrl = `https://t.me/Viral_video44bot?startapp=${vidId}`;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      showToast("শেয়ার লিংক কপি হয়েছে! ✅", "success");
-    }).catch(() => {
-      fallbackCopyText(shareUrl);
-    });
-  } else {
-    fallbackCopyText(shareUrl);
-  }
-}
-
-function fallbackCopyText(text) {
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  textArea.style.position = "fixed";
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-  try {
-    document.execCommand('copy');
-    showToast("শেয়ার লিংক কপি হয়েছে! ✅", "success");
-  } catch (err) {
-    showToast("লিংক কপি করা যায়নি", "danger");
-  }
-  document.body.removeChild(textArea);
 }
 
 function renderAll() {
@@ -749,17 +674,14 @@ async function openDetail(id) {
   saveState();
 
   updateDetailUI(v);
-  
   const modal = document.getElementById('modal-detail');
-  if(modal) {
-    modal.classList.add('open');
-  }
+  if(modal) modal.classList.add('open');
 }
 
 async function updateDetailUI(v) {
   const isUnlocked = state.unlocked[v.id];
   const prog = state.progress[v.id] || 0;
-  const req = v.required_ads || v.requiredAds || 3;
+  const req = v.required_ads || v.requiredAds || 1;
   const pct = Math.floor((prog/req)*100);
 
   const titleEl = document.getElementById('md-title');
@@ -785,8 +707,9 @@ async function updateDetailUI(v) {
 
   const mediaCont = document.getElementById('md-media-container');
   if(mediaCont) {
+    // FIX: ব্যবহার করা হয়েছে v.link (যা ডাটাবেজের সঠিক কলাম নাম)
     if (isUnlocked && v.link) {
-      mediaCont.innerHTML = `<video src="${v.link}" controls autoplay style="width:100%;height:100%"></video>`;
+      mediaCont.innerHTML = `<video src="${v.link}" controls style="width:100%;height:100%"></video>`;
     } else {
       mediaCont.innerHTML = `<img src="${v.thumb || ''}" style="width:100%;height:100%;object-fit:cover">`;
     }
@@ -796,7 +719,7 @@ async function updateDetailUI(v) {
   if(actionArea) {
     if (isUnlocked) {
       actionArea.innerHTML = `
-        <div class="admin-card" style="text-align:center;background:rgba(16,185,129,0.1)">
+        <div class="admin-card" style="text-align:center;background:rgba(34,197,138,0.1)">
           <h3 style="color:var(--success);margin-bottom:10px">🔓 ভিডিও আনলকড!</h3>
           <p style="font-size:12px;color:var(--muted)">উপরের প্লেয়ারে ভিডিও প্লে করুন।</p>
         </div>`;
@@ -856,7 +779,7 @@ function handleAdSuccess(vidId) {
   const v = state.videos.find(x => x.id === vidId);
   if(!v) return;
 
-  const req = v.required_ads || v.requiredAds || 3;
+  const req = v.required_ads || v.requiredAds || 1;
   state.progress[vidId] = (state.progress[vidId] || 0) + 1;
   state.adViews++;
 
@@ -889,7 +812,7 @@ function watchExternal(link) {
 async function saveVideo() {
   const title = document.getElementById('av-title').value;
   const catId = document.getElementById('av-cat').value;
-  const ads = parseInt(document.getElementById('av-ads').value) || 3;
+  const ads = parseInt(document.getElementById('av-ads').value) || 1;
   const thumbPrev = document.getElementById('av-thumb-prev');
   const thumbBase64 = thumbPrev ? thumbPrev._data : '';
   const fileInput = document.getElementById('av-file');
@@ -921,6 +844,7 @@ async function saveVideo() {
       const videoPublicUrl = publicUrlData.publicUrl;
       const vidId = 'v' + Date.now();
 
+      // FIX: টেবিলের কলামের নাম 'link' ব্যবহার করা হয়েছে যাতে ডাটাবেজের সাথে হুবহু মিলে যায়
       const vidData = { 
         id: vidId, 
         title, 
@@ -928,7 +852,7 @@ async function saveVideo() {
         source: 'file', 
         link: videoPublicUrl,
         required_ads: ads, 
-        thumb: thumbBase64 || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60', 
+        thumb: thumbBase64 || '', 
         views: {}
       };
 
@@ -1176,7 +1100,7 @@ function renderComments(vidId) {
   cont.innerHTML = list.map(c => `
     <div class="comment-item">
       <div class="comment-meta"><span>${c.user}</span><span>Just now</span></div>
-      <div style="font-size:12px;color:var(--text)">${c.text}</div>
+      <div style="font-size:12px">${c.text}</div>
     </div>
   `).join('');
 }
@@ -1207,9 +1131,7 @@ function clearAppData() {
 }
 
 function shareVideo() {
-  if (currentActiveVid) {
-    copyVideoShareLink(currentActiveVid.id);
-  } else if (tg.switchInlineQuery) {
+  if (tg.switchInlineQuery) {
     tg.switchInlineQuery("Check out this awesome video!");
   } else {
     showToast("Share feature requires Telegram WebApp", "info");
