@@ -533,7 +533,18 @@ async function initApp() {
   if (supabaseClient) {
     try {
       const { data: dbVids } = await supabaseClient.from('videos').select('*');
-      if (dbVids) state.videos = dbVids;
+      if (dbVids) {
+        state.videos = dbVids;
+        // রিয়েকশন ও ভিউ ক্লাউড থেকে সিঙ্ক করা
+        dbVids.forEach(v => {
+          if (v.views && typeof v.views === 'object') {
+            if(!v.views) v.views = {};
+          }
+          if (v.reactions && Array.isArray(v.reactions)) {
+            state.reactions[v.id] = v.reactions;
+          }
+        });
+      }
 
       const { data: dbCats } = await supabaseClient.from('categories').select('*');
       if (dbCats && dbCats.length > 0) {
@@ -706,7 +717,13 @@ async function openDetail(id) {
 
   if (!v.views) v.views = {};
   v.views[user.id] = true;
+  
   saveState();
+  if (supabaseClient) {
+    try {
+      await supabaseClient.from('videos').update({ views: v.views }).eq('id', id);
+    } catch(e) {}
+  }
 
   updateDetailUI(v);
   const modal = document.getElementById('modal-detail');
@@ -779,7 +796,7 @@ async function updateDetailUI(v) {
   renderComments(v.id);
 }
 
-function toggleReaction() {
+async function toggleReaction() {
   if(!currentActiveVid) return;
   const vidId = currentActiveVid.id;
   if(!state.reactions[vidId]) state.reactions[vidId] = [];
@@ -790,7 +807,14 @@ function toggleReaction() {
   } else {
     state.reactions[vidId].push(user.id);
   }
+  
   saveState();
+  if (supabaseClient) {
+    try {
+      await supabaseClient.from('videos').update({ reactions: state.reactions[vidId] }).eq('id', vidId);
+    } catch(e) {}
+  }
+
   updateDetailUI(currentActiveVid);
 }
 
@@ -896,7 +920,8 @@ async function saveVideo() {
         link: videoPublicUrl,
         required_ads: ads, 
         thumb: thumbBase64 || '', 
-        views: {}
+        views: {},
+        reactions: []
       };
 
       await supabaseClient.from('videos').insert([vidData]);
@@ -1232,10 +1257,22 @@ function clearAppData() {
 }
 
 function shareVideo() {
+  if (!currentActiveVid) {
+    showToast("প্রথমে একটি ভিডিও ওপেন করুন", "warning");
+    return;
+  }
+
+  const botUsername = "Viral_video44bot"; 
+  const shareUrl = `https://t.me/${botUsername}?startapp=${currentActiveVid.id}`;
+
   if (tg.switchInlineQuery) {
-    tg.switchInlineQuery("Check out this awesome video!");
+    tg.switchInlineQuery(`Check out this awesome video! ${shareUrl}`);
   } else {
-    showToast("Share feature requires Telegram WebApp", "info");
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      showToast("শেয়ার লিংক কপি করা হয়েছে! 📋", "success");
+    }).catch(() => {
+      showToast(shareUrl, "info");
+    });
   }
 }
 
