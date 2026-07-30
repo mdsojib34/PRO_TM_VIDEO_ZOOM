@@ -428,7 +428,7 @@ body{padding-bottom:100px}
 <script>
 const ADMIN_ID = 7904568371;
 const STORE_KEY = "VidUnlock_Core_State_V7";
-const BOT_USERNAME = "Viral_video44bot"; // Updated with your specific bot username
+const BOT_USERNAME = "Viral_video44bot";
 
 const SUPABASE_URL = 'https://xvrmkygegzyavwhtvcjp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cm1reWdlZ3p5YXZ3aHR2Y2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyNDg4ODksImV4cCI6MjEwMDgyNDg4OX0.Zm2nj2ea3Cz9tVgL7EQBNoYZ_krAZcYg-CSUg7_Ppk0';
@@ -598,29 +598,24 @@ async function initApp() {
   renderCategories();
   renderAll();
 
-  // 1 & 6. Handle Deep Link / Start App parameter (e.g., ?startapp=v1785385682857)
   handleDeepLink();
   
   const loader = document.getElementById('app-loader');
   if(loader) loader.style.display = 'none';
 }
 
-// 1 & 2 & 6. Complete Deep Link Reading System
 function handleDeepLink() {
   let vidId = null;
   
-  // Telegram Mini App start_param checking
   if (tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
     vidId = tg.initDataUnsafe.start_param;
   }
   
-  // Browser or Fallback URL Search Params checking
   if (!vidId) {
     const urlParams = new URLSearchParams(window.location.search);
     vidId = urlParams.get('startapp') || urlParams.get('v') || urlParams.get('vid');
   }
 
-  // Hash checking fallback
   if (!vidId && window.location.hash) {
     vidId = window.location.hash.substring(1);
   }
@@ -629,19 +624,15 @@ function handleDeepLink() {
     setTimeout(() => {
       const found = state.videos.find(v => v.id === vidId);
       if (found) {
-        // 3. Directly open the video Detail Page
         openDetail(vidId);
       } else {
-        // 4. User-Friendly Error Message if video not found
         showUserFriendlyError("দুঃখিত, এই ভিডিওটি পাওয়া যায়নি অথবা এটি ডিলিট করা হয়েছে।");
       }
     }, 600);
   }
 }
 
-// 4. User-Friendly Error Message Implementation
 function showUserFriendlyError(message) {
-  const appContainer = document.getElementById('app-loader') || document.body;
   const errDiv = document.createElement('div');
   errDiv.style.cssText = "position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;";
   errDiv.innerHTML = `
@@ -792,14 +783,12 @@ function renderViralLinks() {
   `).join('');
 }
 
-// 2 & 3. Fetching Video and Opening Detail Page
 async function openDetail(id) {
   let v = state.videos.find(x => x.id === id);
   
-  // If video not in local state, fetch directly from Supabase for Deep Link accuracy
   if (!v && supabaseClient) {
     try {
-      const { data, error } = await supabaseClient.from('videos').select('*').eq('id', id).single();
+      const { data } = await supabaseClient.from('videos').select('*').eq('id', id).single();
       if (data) {
         v = data;
         state.videos.push(v);
@@ -816,7 +805,6 @@ async function openDetail(id) {
 
   currentActiveVid = v;
 
-  // 7. View Count increment logic
   const viewedKey = `viewed_video_${id}`;
   if (!sessionStorage.getItem(viewedKey)) {
     sessionStorage.setItem(viewedKey, 'true');
@@ -921,7 +909,6 @@ async function updateDetailUI(v) {
         `;
       }
     } else {
-      // 7. Watch Ad feature integration
       actionArea.innerHTML = `
         <button class="btn btn-p" id="ad-btn" onclick="watchAd()" style="margin-top:15px;flex-direction:column;gap:2px;padding:14px 20px">
           <span style="font-size:15px">🎥 WATCH AD (${prog}/${req})</span>
@@ -949,28 +936,20 @@ function handleTelegramClick(vidId) {
   }
 }
 
-/* =========================================================
-   5. UNIQUE DEEP LINK GENERATOR & SHARE SYSTEM
-   ========================================================= */
 function shareVideo(vidId) {
   const v = state.videos.find(x => x.id === vidId);
   if (!v) return;
 
-  // Generate the exact required unique deep link format
   const shareLink = `https://t.me/${BOT_USERNAME}?startapp=${v.id}`;
   const shareText = `🔥 প্রিমিয়াম ভিডিও: ${v.title}\n\nফ্রিতে দেখতে এখানে ক্লিক করুন 👇\n${shareLink}`;
 
-  // Telegram Mini App Native Share Integration
   if (tg.openTelegramLink && typeof tg.switchInlineQuery === 'function') {
     try {
       tg.switchInlineQuery(shareText, ['users', 'groups', 'channels']);
       return;
-    } catch (e) {
-      console.log("Telegram switchInlineQuery failed, falling back...", e);
-    }
+    } catch (e) {}
   }
 
-  // Web Share API fallback
   if (navigator.share) {
     navigator.share({
       title: v.title,
