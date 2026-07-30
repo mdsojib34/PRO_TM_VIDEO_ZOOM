@@ -287,17 +287,28 @@ body{padding-bottom:100px}
 
   <div id="admin-vids" class="admin-subview hidden">
     <div class="admin-card">
-      <h4>➕ নতুন ভিডিও আপলোড করুন (ক্লাউডে)</h4>
+      <h4>➕ নতুন ভিডিও যোগ করুন (ক্লাউডে)</h4>
       <div class="form-group"><label>শিরোনাম</label><input type="text" id="av-title"></div>
       <div class="form-group"><label>ক্যাটাগরি</label><select id="av-cat"></select></div>
+      <div class="form-group">
+        <label>ভিডিও সোর্স (Video Source)</label>
+        <select id="av-source-type" onchange="toggleVideoSourceInput()">
+          <option value="upload">Upload Video</option>
+          <option value="telegram">Telegram Group Link</option>
+        </select>
+      </div>
+      <div class="form-group" id="group-upload-field">
+        <label>📁 ভিডিও ফাইল সিলেক্ট করুন</label>
+        <input type="file" id="av-file" accept="video/*">
+      </div>
+      <div class="form-group hidden" id="group-telegram-field">
+        <label>Telegram Video Link (যেমন: https://t.me/YourGroup/123)</label>
+        <input type="text" id="av-tg-link" placeholder="https://t.me/...">
+      </div>
       <div class="form-group">
         <label>থাম্বনেইল</label>
         <input type="file" accept="image/*" onchange="previewFile(this, 'av-thumb-prev')">
         <div class="thumb-prev" id="av-thumb-prev"><span>Preview</span></div>
-      </div>
-      <div class="form-group">
-        <label>📁 ভিডিও ফাইল সিলেক্ট করুন</label>
-        <input type="file" id="av-file" accept="video/*">
       </div>
       <div class="form-group"><label>প্রয়োজনীয় বিজ্ঞাপন (Required Ads)</label><input type="number" id="av-ads" value="1" min="1"></div>
       <button class="btn btn-p" onclick="saveVideo()" id="upload-btn">ক্লাউডে আপলোড ও সেভ করুন</button>
@@ -533,18 +544,7 @@ async function initApp() {
   if (supabaseClient) {
     try {
       const { data: dbVids } = await supabaseClient.from('videos').select('*');
-      if (dbVids) {
-        state.videos = dbVids;
-        // রিয়েকশন ও ভিউ ক্লাউড থেকে সিঙ্ক করা
-        dbVids.forEach(v => {
-          if (v.views && typeof v.views === 'object') {
-            if(!v.views) v.views = {};
-          }
-          if (v.reactions && Array.isArray(v.reactions)) {
-            state.reactions[v.id] = v.reactions;
-          }
-        });
-      }
+      if (dbVids) state.videos = dbVids;
 
       const { data: dbCats } = await supabaseClient.from('categories').select('*');
       if (dbCats && dbCats.length > 0) {
@@ -717,13 +717,7 @@ async function openDetail(id) {
 
   if (!v.views) v.views = {};
   v.views[user.id] = true;
-  
   saveState();
-  if (supabaseClient) {
-    try {
-      await supabaseClient.from('videos').update({ views: v.views }).eq('id', id);
-    } catch(e) {}
-  }
 
   updateDetailUI(v);
   const modal = document.getElementById('modal-detail');
@@ -770,7 +764,20 @@ async function updateDetailUI(v) {
   const mediaCont = document.getElementById('md-media-container');
   if(mediaCont) {
     if (isUnlocked && v.link) {
-      mediaCont.innerHTML = `<video src="${v.link}" controls autoplay style="width:100%;height:100%"></video>`;
+      if (v.video_type === 'telegram' || (v.link && v.link.includes('t.me/'))) {
+        mediaCont.innerHTML = `
+          <div style="width:100%;height:100%;position:relative;background:#000;">
+            <img src="${v.thumb || ''}" style="width:100%;height:100%;object-fit:cover;opacity:0.5;">
+            <div style="position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;">
+              <button class="btn btn-s" onclick="watchExternal('${v.link}')" style="width:auto;padding:12px 24px;">
+                ▶ WATCH IN TELEGRAM
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        mediaCont.innerHTML = `<video src="${v.link}" controls autoplay style="width:100%;height:100%"></video>`;
+      }
     } else {
       mediaCont.innerHTML = `<img src="${v.thumb || ''}" style="width:100%;height:100%;object-fit:cover">`;
     }
@@ -779,11 +786,19 @@ async function updateDetailUI(v) {
   const actionArea = document.getElementById('md-action-area');
   if(actionArea) {
     if (isUnlocked) {
-      actionArea.innerHTML = `
-        <button class="btn btn-s" style="margin-top:15px">
-          ▶ WATCH VIDEO
-        </button>
-      `;
+      if (v.video_type === 'telegram' || (v.link && v.link.includes('t.me/'))) {
+        actionArea.innerHTML = `
+          <button class="btn btn-s" onclick="watchExternal('${v.link}')" style="margin-top:15px">
+            ▶ WATCH VIDEO
+          </button>
+        `;
+      } else {
+        actionArea.innerHTML = `
+          <button class="btn btn-s" style="margin-top:15px">
+            ▶ WATCH VIDEO
+          </button>
+        `;
+      }
     } else {
       actionArea.innerHTML = `
         <button class="btn btn-p" id="ad-btn" onclick="watchAd()" style="margin-top:15px;flex-direction:column;gap:2px;padding:14px 20px">
@@ -796,7 +811,7 @@ async function updateDetailUI(v) {
   renderComments(v.id);
 }
 
-async function toggleReaction() {
+function toggleReaction() {
   if(!currentActiveVid) return;
   const vidId = currentActiveVid.id;
   if(!state.reactions[vidId]) state.reactions[vidId] = [];
@@ -807,14 +822,7 @@ async function toggleReaction() {
   } else {
     state.reactions[vidId].push(user.id);
   }
-  
   saveState();
-  if (supabaseClient) {
-    try {
-      await supabaseClient.from('videos').update({ reactions: state.reactions[vidId] }).eq('id', vidId);
-    } catch(e) {}
-  }
-
   updateDetailUI(currentActiveVid);
 }
 
@@ -877,71 +885,109 @@ function watchExternal(link) {
   }
 }
 
+function toggleVideoSourceInput() {
+  const sourceType = document.getElementById('av-source-type').value;
+  const uploadField = document.getElementById('group-upload-field');
+  const telegramField = document.getElementById('group-telegram-field');
+  if (sourceType === 'upload') {
+    uploadField.classList.remove('hidden');
+    telegramField.classList.add('hidden');
+  } else {
+    uploadField.classList.add('hidden');
+    telegramField.classList.remove('hidden');
+  }
+}
+
 async function saveVideo() {
   const title = document.getElementById('av-title').value;
   const catId = document.getElementById('av-cat').value;
+  const sourceType = document.getElementById('av-source-type').value;
   const ads = parseInt(document.getElementById('av-ads').value) || 1;
   const thumbPrev = document.getElementById('av-thumb-prev');
   const thumbBase64 = thumbPrev ? thumbPrev._data : '';
-  const fileInput = document.getElementById('av-file');
   const uploadBtn = document.getElementById('upload-btn');
 
   if (!title) return showToast("দয়া করে ভিডিওর শিরোনাম দিন");
-  if (!fileInput || !fileInput.files[0]) return showToast("দয়া করে একটি ভিডিও ফাইল সিলেক্ট করুন");
 
-  if(uploadBtn) {
-    uploadBtn.disabled = true;
-    uploadBtn.textContent = "ক্লাউডে আপলোড হচ্ছে... দয়া করে অপেক্ষা করুন ⏳";
+  let videoPublicUrl = '';
+
+  if (sourceType === 'upload') {
+    const fileInput = document.getElementById('av-file');
+    if (!fileInput || !fileInput.files[0]) return showToast("দয়া করে একটি ভিডিও ফাইল সিলেক্ট করুন");
+    
+    if(uploadBtn) {
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = "ক্লাউডে আপলোড হচ্ছে... দয়া করে অপেক্ষা করুন ⏳";
+    }
+
+    try {
+      const videoFile = fileInput.files[0];
+      const fileName = `video_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${videoFile.name.split('.').pop()}`;
+
+      if (supabaseClient) {
+        const { error: uploadError } = await supabaseClient.storage
+          .from('videos')
+          .upload(fileName, videoFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = supabaseClient.storage
+          .from('videos')
+          .getPublicUrl(fileName);
+
+        videoPublicUrl = publicUrlData.publicUrl;
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      showToast("আপলোড ব্যর্থ হয়েছে! Supabase Storage bucket পলিসি বা সাইজ চেক করুন।", "danger");
+      if(uploadBtn) {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "ক্লাউডে আপলোড ও সেভ করুন";
+      }
+      return;
+    }
+  } else {
+    const tgLinkInput = document.getElementById('av-tg-link');
+    videoPublicUrl = tgLinkInput ? tgLinkInput.value : '';
+    if (!videoPublicUrl) return showToast("দয়া করে টেলিগ্রাম ভিডিও লিংক দিন");
   }
 
   try {
-    const videoFile = fileInput.files[0];
-    const fileName = `video_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${videoFile.name.split('.').pop()}`;
+    const vidId = 'v' + Date.now();
+    const vidData = { 
+      id: vidId, 
+      title, 
+      category_id: catId, 
+      video_type: sourceType,
+      source: sourceType === 'upload' ? 'file' : 'telegram', 
+      link: videoPublicUrl,
+      required_ads: ads, 
+      thumb: thumbBase64 || '', 
+      views: {}
+    };
 
     if (supabaseClient) {
-      const { error: uploadError } = await supabaseClient.storage
-        .from('videos')
-        .upload(fileName, videoFile);
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabaseClient.storage
-        .from('videos')
-        .getPublicUrl(fileName);
-
-      const videoPublicUrl = publicUrlData.publicUrl;
-      const vidId = 'v' + Date.now();
-
-      const vidData = { 
-        id: vidId, 
-        title, 
-        category_id: catId, 
-        source: 'file', 
-        link: videoPublicUrl,
-        required_ads: ads, 
-        thumb: thumbBase64 || '', 
-        views: {},
-        reactions: []
-      };
-
       await supabaseClient.from('videos').insert([vidData]);
-      state.videos.push(vidData);
     }
+    state.videos.push(vidData);
 
     saveState();
     renderAll();
-    showToast("ভিডিও সফলভাবে ক্লাউডে আপলোড ও সেভ হয়েছে! ✅", "success");
+    showToast("ভিডিও সফলভাবে সেভ হয়েছে! ✅", "success");
     
     document.getElementById('av-title').value = '';
-    document.getElementById('av-file').value = '';
+    const fileInput = document.getElementById('av-file');
+    if(fileInput) fileInput.value = '';
+    const tgLinkInput = document.getElementById('av-tg-link');
+    if(tgLinkInput) tgLinkInput.value = '';
     if(thumbPrev) {
       thumbPrev.innerHTML = '<span>Preview</span>';
       thumbPrev._data = null;
     }
 
   } catch (err) {
-    console.error("Upload error:", err);
-    showToast("আপলোড ব্যর্থ হয়েছে! Supabase Storage bucket পলিসি বা সাইজ চেক করুন।", "danger");
+    console.error("Save error:", err);
+    showToast("সেভ করতে সমস্যা হয়েছে!", "danger");
   } finally {
     if(uploadBtn) {
       uploadBtn.disabled = false;
@@ -1037,6 +1083,7 @@ function renderAdmin() {
       const rCount = (state.reactions[v.id] || []).length;
       const cCount = (state.comments[v.id] || []).length;
       const reqAds = v.required_ads || v.requiredAds || 1;
+      const vType = v.video_type || (v.link && v.link.includes('t.me/') ? 'telegram' : 'upload');
 
       return `
         <div class="admin-list-item" style="flex-direction:column;align-items:stretch;gap:8px">
@@ -1047,6 +1094,7 @@ function renderAdmin() {
             </div>
             <button class="btn btn-d" style="width:auto;padding:6px 12px;font-size:11px" onclick="deleteVideo('${v.id}')">ডিলিট</button>
           </div>
+          <div style="font-size:10px;color:var(--primary-2)">Type: ${vType.toUpperCase()}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);background:var(--surface-2);padding:6px 10px;border-radius:8px">
             <span>👁 ${vCount} views</span>
             <span>🔓 ${uCount} unlocked</span>
@@ -1257,22 +1305,10 @@ function clearAppData() {
 }
 
 function shareVideo() {
-  if (!currentActiveVid) {
-    showToast("প্রথমে একটি ভিডিও ওপেন করুন", "warning");
-    return;
-  }
-
-  const botUsername = "Viral_video44bot"; 
-  const shareUrl = `https://t.me/${botUsername}?startapp=${currentActiveVid.id}`;
-
   if (tg.switchInlineQuery) {
-    tg.switchInlineQuery(`Check out this awesome video! ${shareUrl}`);
+    tg.switchInlineQuery("Check out this awesome video!");
   } else {
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      showToast("শেয়ার লিংক কপি করা হয়েছে! 📋", "success");
-    }).catch(() => {
-      showToast(shareUrl, "info");
-    });
+    showToast("Share feature requires Telegram WebApp", "info");
   }
 }
 
