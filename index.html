@@ -33,6 +33,7 @@
   --grad-unlock:linear-gradient(135deg,#22c58a 0%,#5bd6b0 100%);
   --grad-card:linear-gradient(160deg,#1a1f33 0%,#141826 100%);
   --shadow-glow:0 10px 40px -10px rgba(124,92,255,.55);
+  --shadow-card:0 8px 25px -5px rgba(0,0,0,0.4);
 }
 html,body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;overflow-x:hidden}
 body{padding-bottom:100px}
@@ -79,7 +80,7 @@ body{padding-bottom:100px}
 
 /* GRID & CARDS */
 .grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));gap:12px}
-.card{background:var(--grad-card);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;transition:0.2s;cursor:pointer}
+.card{background:var(--grad-card);border:1px solid var(--border);border-radius:18px;overflow:hidden;position:relative;transition:0.2s;cursor:pointer;box-shadow:var(--shadow-card)}
 .card:active{transform:scale(0.97)}
 .card-thumb{aspect-ratio:16/10;position:relative;background:#000}
 .card-thumb img{width:100%;height:100%;object-fit:cover}
@@ -109,11 +110,12 @@ body{padding-bottom:100px}
 .sheet-header{padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
 .sheet-content{padding:16px;overflow-y:auto;flex:1}
 
-/* PROGRESS BAR */
-.prog-wrap{margin:15px 0}
-.prog-labels{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
-.prog-track{height:8px;background:var(--surface-2);border-radius:10px;overflow:hidden}
-.prog-fill{height:100%;background:var(--grad-hero);border-radius:10px;transition:0.5s ease;width:0%}
+/* METRICS ROW */
+.detail-metrics-row{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:15px 0}
+.metric-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:var(--shadow-card)}
+.metric-box .metric-icon{font-size:16px;margin-bottom:2px}
+.metric-box .metric-val{font-size:13px;font-weight:800;color:#fff}
+.metric-box .metric-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:2px}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 20px;border-radius:14px;font-weight:700;font-size:14px;width:100%;border:none;color:#fff;transition:0.2s;cursor:pointer}
@@ -124,20 +126,33 @@ body{padding-bottom:100px}
 .btn-d{background:var(--danger)}
 .btn:disabled{opacity:0.6;pointer-events:none}
 
-/* COMMENTS */
-.comment-list{margin-top:20px;display:flex;flex-direction:column;gap:10px}
-.comment-item{background:var(--surface-2);padding:10px;border-radius:12px}
-.comment-meta{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;color:var(--primary-2)}
+.detail-actions-row{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-top:15px}
+.detail-actions-row .btn{padding:10px 8px;font-size:12px;border-radius:12px}
 
-/* ADMIN INTERFACE */
+/* COMMENTS */
+.comment-list{margin-top:15px;display:flex;flex-direction:column;gap:10px}
+.comment-item{background:var(--surface);border:1px solid var(--border);padding:12px;border-radius:16px;box-shadow:var(--shadow-card)}
+.comment-user-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.comment-avatar{width:28px;height:28px;border-radius:50%;background:var(--grad-hero);display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff}
+.comment-info{display:flex;flex-direction:column}
+.comment-author{font-size:12px;font-weight:700;color:#fff}
+.comment-time{font-size:9px;color:var(--muted)}
+.comment-text{font-size:13px;color:var(--text);padding-left:38px;line-height:1.4}
+
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+.animate-beat { animation: heartBeat 0.3s ease; }
+
+/* ADMIN */
 .admin-card{background:var(--surface);border:1px solid var(--border);padding:15px;border-radius:18px;margin-bottom:15px}
 .form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:11px;margin-bottom:5px;color:var(--muted)}
 .form-group input, .form-group select, .form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit}
 .thumb-prev{width:100%;aspect-ratio:16/9;border:2px dashed var(--border);border-radius:12px;margin-top:5px;display:grid;place-items:center;overflow:hidden}
 .thumb-prev img{width:100%;height:100%;object-fit:cover}
-
-/* ADMIN LIST ITEMS */
 .admin-list-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);padding:10px 12px;border-radius:12px;margin-bottom:8px}
 .admin-list-info{display:flex;align-items:center;gap:10px;overflow:hidden}
 .admin-list-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;background:#000}
@@ -153,7 +168,6 @@ body{padding-bottom:100px}
 .toast{background:var(--surface-2);border:1px solid var(--border);padding:12px 16px;border-radius:12px;margin-bottom:10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,0.5);display:flex;align-items:center;gap:10px;animation:toastIn 0.3s forwards}
 @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
 
-/* UTILS */
 .hidden{display:none}
 .empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
 .empty-state i{font-size:40px;display:block;margin-bottom:10px}
@@ -161,7 +175,7 @@ body{padding-bottom:100px}
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
+<!-- LOADING -->
 <div id="app-loader">
   <div class="spinner"></div>
   <p style="font-size:12px; color:var(--muted)">VidUnlock Loading...</p>
@@ -188,7 +202,7 @@ body{padding-bottom:100px}
   </div>
 </header>
 
-<!-- SEARCH & CATEGORIES -->
+<!-- SEARCH & CATEGORY -->
 <div id="sticky-utils">
   <div class="search-container">
     <div class="search-box">
@@ -199,7 +213,7 @@ body{padding-bottom:100px}
   <div class="cat-tabs" id="category-tabs"></div>
 </div>
 
-<!-- VIEW: HOME -->
+<!-- HOME VIEW -->
 <section class="view active" id="view-home">
   <div class="hero-card">
     <h2 id="hero-welcome">হ্যালো! 👋</h2>
@@ -217,25 +231,25 @@ body{padding-bottom:100px}
   </div>
 </section>
 
-<!-- VIEW: FAVORITES -->
+<!-- FAVORITES VIEW -->
 <section class="view" id="view-fav">
   <h3 class="page-title" data-i18n="myFavs">❤️ আপনার পছন্দ</h3>
   <div class="grid" id="fav-grid"></div>
 </section>
 
-<!-- VIEW: UNLOCKED -->
+<!-- UNLOCKED VIEW -->
 <section class="view" id="view-unlock">
   <h3 class="page-title" data-i18n="unlockedVids">🔓 আনলক করা</h3>
   <div class="grid" id="unlock-grid"></div>
 </section>
 
-<!-- VIEW: VIRAL LINKS -->
+<!-- VIRAL LINKS VIEW -->
 <section class="view" id="view-viral">
   <h3 class="page-title" data-i18n="viralLinks">🔥 ভাইরাল লিংক</h3>
   <div id="viral-links-list"></div>
 </section>
 
-<!-- VIEW: PROFILE -->
+<!-- PROFILE VIEW -->
 <section class="view" id="view-profile">
   <div style="text-align:center;padding:30px 0">
     <div id="prof-pic" style="width:80px;height:80px;border-radius:50%;background:var(--grad-hero);margin:0 auto 15px;display:grid;place-items:center;font-size:30px;font-weight:800;border:3px solid var(--surface-2)">U</div>
@@ -251,7 +265,7 @@ body{padding-bottom:100px}
   </div>
 </section>
 
-<!-- VIEW: ADMIN -->
+<!-- ADMIN VIEW -->
 <section class="view" id="view-admin">
   <h3 class="page-title" data-i18n="adminPanel">🛠 অ্যাডমিন প্যানেল</h3>
   <div class="cat-tabs" style="padding:0;margin-bottom:15px">
@@ -329,11 +343,11 @@ body{padding-bottom:100px}
   </div>
 </section>
 
-<!-- MODAL: DETAIL -->
+<!-- DETAIL MODAL -->
 <div class="modal" id="modal-detail">
   <div class="modal-sheet">
     <div class="sheet-header">
-      <button onclick="closeModal('modal-detail')" style="background:none;border:none;font-size:22px;color:#fff">✕</button>
+      <button onclick="closeModal('modal-detail')" style="background:none;border:none;font-size:22px;color:#fff;cursor:pointer">✕</button>
       <div id="md-header-title" style="font-weight:700">Video Details</div>
       <div style="display:flex;gap:15px;align-items:center;">
         <button id="md-react-btn" style="background:none;border:none;font-size:20px;cursor:pointer;" onclick="toggleReaction()">❤️ <span id="md-react-count">0</span></button>
@@ -341,24 +355,45 @@ body{padding-bottom:100px}
       </div>
     </div>
     <div class="sheet-content">
-      <div id="md-media-container" style="width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;margin-bottom:15px"></div>
-      <h2 id="md-title"></h2>
-      <div style="display:flex;gap:8px;margin:10px 0;align-items:center">
-        <span class="badge-unlocked" id="md-badge" style="padding:2px 8px;border-radius:6px;font-size:10px">Premium</span>
-        <span style="font-size:11px;color:var(--muted)" id="md-views">0 Views</span>
-      </div>
-      <p id="md-desc" style="font-size:13px;color:var(--muted);line-height:1.5"></p>
+      <div id="md-media-container" style="width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;box-shadow:var(--shadow-card)"></div>
       
+      <div style="margin-top:15px">
+        <h2 id="md-title" style="font-size:16px;font-weight:700;line-height:1.4"></h2>
+      </div>
+
+      <div class="detail-metrics-row">
+        <div class="metric-box">
+          <div class="metric-icon">👁️</div>
+          <div class="metric-val" id="md-metric-views">0</div>
+          <div class="metric-lbl">Total Views</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon">🔓</div>
+          <div class="metric-val" id="md-metric-prog">0/1</div>
+          <div class="metric-lbl">Progress</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-icon">📁</div>
+          <div class="metric-val" id="md-metric-cat" style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Category</div>
+          <div class="metric-lbl">Category</div>
+        </div>
+      </div>
+
       <div id="md-action-area"></div>
 
-      <div style="margin-top:20px;border-top:1px solid var(--border);padding-top:15px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <h4>💬 কমেন্টস</h4>
-          <button class="btn btn-g" style="padding:5px 10px;width:auto;font-size:10px" onclick="shareVideo()">🔗 শেয়ার</button>
+      <div class="detail-actions-row">
+        <button class="btn btn-g" onclick="closeModal('modal-detail');showView('home')"><i>🏠</i> হোম</button>
+        <button class="btn btn-g" onclick="scrollToComments()"><i>💬</i> কমেন্টস</button>
+        <button class="btn btn-g" onclick="shareVideo()"><i>🔗</i> শেয়ার</button>
+      </div>
+
+      <div id="comments-section-anchor" style="margin-top:25px;border-top:1px solid var(--border);padding-top:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h4 style="font-size:15px">💬 কমেন্টস (<span id="md-comment-count">0</span>)</h4>
         </div>
         <div style="display:flex;gap:8px">
-          <input type="text" id="md-comment-input" placeholder="আপনার মন্তব্য লিখুন..." style="flex:1;background:var(--surface);border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff">
-          <button class="btn btn-p" style="width:auto;padding:0 15px" onclick="postComment()">Submit</button>
+          <input type="text" id="md-comment-input" placeholder="আপনার মন্তব্য লিখুন..." style="flex:1;background:var(--surface);border:1px solid var(--border);padding:10px 14px;border-radius:12px;color:#fff;outline:none">
+          <button class="btn btn-p" style="width:auto;padding:0 18px;border-radius:12px" onclick="postComment()">Post</button>
         </div>
         <div class="comment-list" id="md-comments"></div>
       </div>
@@ -682,19 +717,29 @@ async function updateDetailUI(v) {
   const isUnlocked = state.unlocked[v.id];
   const prog = state.progress[v.id] || 0;
   const req = v.required_ads || v.requiredAds || 1;
-  const pct = Math.floor((prog/req)*100);
 
   const titleEl = document.getElementById('md-title');
   if(titleEl) titleEl.textContent = v.title;
   
   const viewsCount = v.views ? (typeof v.views === 'object' ? Object.keys(v.views).length : 0) : 0;
-  const viewsEl = document.getElementById('md-views');
-  if(viewsEl) viewsEl.textContent = viewsCount + " Views";
+  const metricViews = document.getElementById('md-metric-views');
+  if(metricViews) metricViews.textContent = viewsCount;
+
+  const metricProg = document.getElementById('md-metric-prog');
+  if(metricProg) metricProg.textContent = `${prog}/${req}`;
+
+  const catObj = state.categories.find(c => c.id === v.category_id || c.id === v.categoryId);
+  const metricCat = document.getElementById('md-metric-cat');
+  if(metricCat) metricCat.textContent = catObj ? catObj.name : 'General';
   
   const favBtn = document.getElementById('md-fav-btn');
   if(favBtn) {
     favBtn.textContent = state.favorites[v.id] ? "❤️" : "🤍";
-    favBtn.onclick = () => toggleFav(v.id);
+    favBtn.onclick = () => {
+      toggleFav(v.id);
+      favBtn.classList.add('animate-beat');
+      setTimeout(() => favBtn.classList.remove('animate-beat'), 300);
+    };
   }
 
   if(!state.reactions[v.id]) state.reactions[v.id] = [];
@@ -707,9 +752,8 @@ async function updateDetailUI(v) {
 
   const mediaCont = document.getElementById('md-media-container');
   if(mediaCont) {
-    // FIX: ব্যবহার করা হয়েছে v.link (যা ডাটাবেজের সঠিক কলাম নাম)
     if (isUnlocked && v.link) {
-      mediaCont.innerHTML = `<video src="${v.link}" controls style="width:100%;height:100%"></video>`;
+      mediaCont.innerHTML = `<video src="${v.link}" controls autoplay style="width:100%;height:100%"></video>`;
     } else {
       mediaCont.innerHTML = `<img src="${v.thumb || ''}" style="width:100%;height:100%;object-fit:cover">`;
     }
@@ -719,17 +763,17 @@ async function updateDetailUI(v) {
   if(actionArea) {
     if (isUnlocked) {
       actionArea.innerHTML = `
-        <div class="admin-card" style="text-align:center;background:rgba(34,197,138,0.1)">
-          <h3 style="color:var(--success);margin-bottom:10px">🔓 ভিডিও আনলকড!</h3>
-          <p style="font-size:12px;color:var(--muted)">উপরের প্লেয়ারে ভিডিও প্লে করুন।</p>
-        </div>`;
+        <button class="btn btn-s" style="margin-top:15px">
+          ▶ WATCH VIDEO
+        </button>
+      `;
     } else {
       actionArea.innerHTML = `
-        <div class="prog-wrap">
-          <div class="prog-labels"><span>আনলক অগ্রগতি</span><span id="prog-text">${prog}/${req} Ads</span></div>
-          <div class="prog-track"><div class="prog-fill" id="prog-bar" style="width:${pct}%"></div></div>
-        </div>
-        <button class="btn btn-p" id="ad-btn" onclick="watchAd()">📺 WATCH AD TO UNLOCK</button>`;
+        <button class="btn btn-p" id="ad-btn" onclick="watchAd()" style="margin-top:15px;flex-direction:column;gap:2px;padding:14px 20px">
+          <span style="font-size:15px">🎥 WATCH AD (${prog}/${req})</span>
+          <span style="font-size:10px;opacity:0.85;font-weight:400">Complete ${req - prog} more rounds to unlock</span>
+        </button>
+      `;
     }
   }
   renderComments(v.id);
@@ -844,7 +888,6 @@ async function saveVideo() {
       const videoPublicUrl = publicUrlData.publicUrl;
       const vidId = 'v' + Date.now();
 
-      // FIX: টেবিলের কলামের নাম 'link' ব্যবহার করা হয়েছে যাতে ডাটাবেজের সাথে হুবহু মিলে যায়
       const vidData = { 
         id: vidId, 
         title, 
@@ -963,15 +1006,36 @@ function renderAdmin() {
 
   const vidListCont = document.getElementById('admin-vid-list');
   if (vidListCont) {
-    vidListCont.innerHTML = state.videos.length ? state.videos.map(v => `
-      <div class="admin-list-item">
-        <div class="admin-list-info">
-          <img src="${v.thumb || ''}" class="admin-list-thumb">
-          <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${v.title}</div>
+    vidListCont.innerHTML = state.videos.length ? state.videos.map(v => {
+      const vCount = v.views ? Object.keys(v.views).length : 0;
+      const uCount = Object.keys(state.unlocked || {}).filter(k => k === v.id && state.unlocked[k]).length;
+      const rCount = (state.reactions[v.id] || []).length;
+      const cCount = (state.comments[v.id] || []).length;
+      const reqAds = v.required_ads || v.requiredAds || 1;
+
+      return `
+        <div class="admin-list-item" style="flex-direction:column;align-items:stretch;gap:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="admin-list-info">
+              <img src="${v.thumb || ''}" class="admin-list-thumb">
+              <div style="font-size:12px;font-weight:600;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.title}</div>
+            </div>
+            <button class="btn btn-d" style="width:auto;padding:6px 12px;font-size:11px" onclick="deleteVideo('${v.id}')">ডিলিট</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);background:var(--surface-2);padding:6px 10px;border-radius:8px">
+            <span>👁 ${vCount} views</span>
+            <span>🔓 ${uCount} unlocked</span>
+            <span>❤️ ${rCount} likes</span>
+            <span>💬 ${cCount} comments</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <span style="font-size:10px;color:var(--muted)">Required Ads:</span>
+            <input type="number" id="edit-ads-${v.id}" value="${reqAds}" min="1" style="width:60px;background:var(--bg);border:1px solid var(--border);padding:4px;border-radius:6px;color:#fff;font-size:11px">
+            <button class="btn btn-p" style="width:auto;padding:4px 10px;font-size:10px" onclick="updateVideoAds('${v.id}')">Update</button>
+          </div>
         </div>
-        <button class="btn btn-d" style="width:auto;padding:6px 12px;font-size:11px" onclick="deleteVideo('${v.id}')">ডিলিট</button>
-      </div>
-    `).join('') : '<div class="empty-state">কোনো ভিডিও নেই</div>';
+      `;
+    }).join('') : '<div class="empty-state">কোনো ভিডিও নেই</div>';
   }
 
   const catListCont = document.getElementById('admin-cat-list');
@@ -998,6 +1062,23 @@ function renderAdmin() {
         <button class="btn btn-d" style="width:auto;padding:6px 12px;font-size:11px" onclick="deleteViralLink('${l.id}')">ডিলিট</button>
       </div>
     `).join('') : '<div class="empty-state">কোনো লিংক যুক্ত নেই</div>';
+  }
+}
+
+async function updateVideoAds(id) {
+  const input = document.getElementById(`edit-ads-${id}`);
+  if(!input) return;
+  const val = parseInt(input.value) || 1;
+  const v = state.videos.find(x => x.id === id);
+  if(v) {
+    v.required_ads = val;
+    if(supabaseClient) {
+      try {
+        await supabaseClient.from('videos').update({ required_ads: val }).eq('id', id);
+      } catch(e) {}
+    }
+    saveState();
+    showToast("Required Ads updated successfully! ✅", "success");
   }
 }
 
@@ -1093,14 +1174,33 @@ function closeModal(id) {
   if(mediaCont) mediaCont.innerHTML = '';
 }
 
+function scrollToComments() {
+  const anchor = document.getElementById('comments-section-anchor');
+  if(anchor) anchor.scrollIntoView({ behavior: 'smooth' });
+}
+
 function renderComments(vidId) {
   const cont = document.getElementById('md-comments');
+  const countEl = document.getElementById('md-comment-count');
   if(!cont) return;
   const list = state.comments[vidId] || [];
+  if(countEl) countEl.textContent = list.length;
+
+  if(!list.length) {
+    cont.innerHTML = '<div class="empty-state" style="padding:20px">কোনো কমেন্ট নেই</div>';
+    return;
+  }
+
   cont.innerHTML = list.map(c => `
     <div class="comment-item">
-      <div class="comment-meta"><span>${c.user}</span><span>Just now</span></div>
-      <div style="font-size:12px">${c.text}</div>
+      <div class="comment-user-row">
+        <div class="comment-avatar">${c.user ? c.user.charAt(0) : 'U'}</div>
+        <div class="comment-info">
+          <div class="comment-author">${c.user}</div>
+          <div class="comment-time">Just now</div>
+        </div>
+      </div>
+      <div class="comment-text">${c.text}</div>
     </div>
   `).join('');
 }
@@ -1113,6 +1213,7 @@ function postComment() {
   input.value = '';
   saveState();
   renderComments(currentActiveVid.id);
+  renderAdmin();
 }
 
 function exportData() {
